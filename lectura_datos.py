@@ -24,12 +24,12 @@ covid['residencia_dpto'] = (covid.residencia_provincia_id+covid.residencia_depar
 
 dptos_censo['DPTO'] = dptos_censo['DPTO'].astype(str)
 
-cruce = pd.merge(covid, dptos_censo, how= "outer", right_on= 'DPTO',left_on = 'residencia_dpto')
+#cruce = pd.merge(covid, dptos_censo, how= "outer", right_on= 'DPTO',left_on = 'residencia_dpto')
 
-cruce.residencia_dpto
+#cruce.residencia_dpto
 
-no_encontrados = cruce[cruce.NOMDPTO.isna()]
+#no_encontrados = cruce[cruce.NOMDPTO.isna()]
 
-no_encontrados.residencia_departamento_nombre
+#no_encontrados.residencia_departamento_nombre
 
 covid.to_csv('datos/covid.csv', index = False)

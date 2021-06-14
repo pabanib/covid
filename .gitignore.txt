@@ -1,4 +1,0 @@
-lectura_datos.py
-datos
-shape_files
-
