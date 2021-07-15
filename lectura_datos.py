@@ -6,30 +6,21 @@ Created on Sat Jun  5 10:33:45 2021
 """
 
 import pandas as pd 
+import geopandas as gpd
 
 covid = pd.read_csv('D:/MisDocumentos/Documentos/Bases de datos/Covid19Casos/Covid19Casos.csv')
-dptos_censo = pd.read_csv('D:/MisDocumentos/Documentos/Bases de datos/Censo 2010/DPTO.csv',delimiter = ';')
 
-covid.head()
-covid.columns
-covid[covid['fecha_apertura'] == '2021-06-03']
-covid_dpt = covid[covid['residencia_departamento_nombre'] == 'Guaymallén']
+#Arg = gpd.read_file('shape_files/pxdptodatosok.shp')
 
-def completar(n):
-    return str(n).zfill(3)
+import preproceso as pre 
 
-covid['residencia_provincia_id'] = covid['residencia_provincia_id'].astype(str)
-covid['residencia_departamento_id'] = covid['residencia_departamento_id'].apply(completar) 
-covid['residencia_dpto'] = (covid.residencia_provincia_id+covid.residencia_departamento_id).astype(int)
+gen_datos = pre.preparar_datos(covid)
+del(covid)
 
-dptos_censo['DPTO'] = dptos_censo['DPTO'].astype(str)
+covid_geo = gen_datos.fit()
+covid_geo.dtypes
 
-#cruce = pd.merge(covid, dptos_censo, how= "outer", right_on= 'DPTO',left_on = 'residencia_dpto')
+import pickle 
 
-#cruce.residencia_dpto
-
-#no_encontrados = cruce[cruce.NOMDPTO.isna()]
-
-#no_encontrados.residencia_departamento_nombre
-
-covid.to_csv('datos/covid.csv', index = False)
+with open("datos/covid_geo.pickle", "wb") as f:
+    pickle.dump(covid_geo, f)
