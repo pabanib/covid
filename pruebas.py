@@ -8,7 +8,6 @@ Created on Sat Jun 19 22:22:44 2021
 import pandas as pd
 import sklearn as sk
 import geopandas as gpd 
-import pysal as ps 
 import numpy as np
 import matplotlib.pyplot as plt
 import pickle 
@@ -73,8 +72,6 @@ for k in covid_periodos.keys():
 for k in covid_periodos.keys():
     print(covid_periodos[k]['df'].isnull().values.any())
 
-with open("datos/covid_periodos.pickle", "wb") as f:
-    pickle.dump(covid_periodos, f)
 
 #%% coeficiente de localización
 
