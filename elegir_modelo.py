@@ -30,6 +30,8 @@ class metodo():
         dic = diccionario_parametros
         kmean = {'n_clusters': 8, 'init': 'k-means++', 'n_init': 10, 'max_iter':300, 'tol': 0.0001}
         aglo = {'n_clusters': 8, 'affinity': 'euclidean', 'connectivity':None, 'linkage': 'ward'}
+        tskmean = {'n_clusters': 8, 'init': 'k-means++', 'n_init': 1, 'max_iter':300, 'tol': 0.0001, 'metric': "dtw"}
+        kshape = {'n_clusters': 8,  'max_iter':100, 'tol': 0.0001, 'init': 'random'}
         if str(type(self.metodo)) == "<class 'sklearn.cluster._kmeans.KMeans'>":
             for k in kmean.keys():
                 try:
@@ -45,9 +47,29 @@ class metodo():
                 try:
                     aglo[k] = dic[k] 
                 except KeyError:
-                    print('la clave {} no se encuentra'.format(k))
+                    pass #print('la clave {} no se encuentra'.format(k))
             metod = copy(self.metodo)    
             metod.__init__(n_clusters = aglo['n_clusters'], affinity = aglo['affinity'], connectivity = aglo['connectivity'],linkage = aglo['linkage'] )
+            return metod
+        
+        elif str(type(self.metodo)) == "<class 'tslearn.clustering.kmeans.TimeSeriesKMeans'>":
+            for k in tskmean.keys():
+                try:
+                    tskmean[k] = dic[k] 
+                except KeyError:
+                    pass                  
+            metod = copy(self.metodo)    
+            metod.__init__(n_clusters = tskmean['n_clusters'], init = tskmean['init'], n_init = tskmean['n_init'], tol = tskmean['tol'], metric = "dtw")
+            return metod
+        
+        elif str(type(self.metodo)) == "<class 'tslearn.clustering.kshape.KShape'>":
+            for k in kshape.keys():
+                try:
+                    kshape[k] = dic[k] 
+                except KeyError:
+                    pass                  
+            metod = copy(self.metodo)    
+            metod.__init__(n_clusters = kshape['n_clusters'], init = kshape['init'], tol = tskmean['tol'] )
             return metod
         
         else:
