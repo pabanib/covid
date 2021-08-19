@@ -7,7 +7,7 @@ Evalúa varios metodos de clustering bajo alguna metrica probando varios hiperpa
 
 
 """
-from sklearn.cluster import KMeans, AgglomerativeClustering
+#from sklearn.cluster import KMeans, AgglomerativeClustering
 from copy import copy
 import pandas as pd
 import time
@@ -18,6 +18,7 @@ class metodo():
         # Parameters: 
         # metodo: It is the clustering metodology of scikit learn
         # param: Dictionary of  metodos's parameters 
+        # metrci: Dictionary of {name: callable()}
         self.metodo = metodo
         self.param = param
         self.metric = metric
@@ -80,19 +81,32 @@ class metodo():
         p = self.grid()
         self.parametros = p
         modelos = []
+        metrics = []
         for dic in p:
             try:
                 model = self.modelo(dic)
                 inicio = time.time()
                 model.fit(data)
-                rdo = self.metric(data, model)
+                rdo = self.calc_metric(data, model)
                 tiempo = time.time()-inicio
-                modelos.append([model,rdo,tiempo, sys.getsizeof(model)])
+                modelos.append([model,tiempo, sys.getsizeof(model)])
+                metrics.append(rdo.values[0])
             except:
                 print('fallo el sig dic:')
                 print(dic)
-        modelos = pd.DataFrame(modelos, columns = ('modelo','Metrica', 'tiempo','Tamaño'))
+        modelos = pd.DataFrame(modelos, columns = ('modelo', 'tiempo','Tamaño'))
+        self.metrics = pd.DataFrame(metrics, columns = rdo.columns)
         self.modelos = modelos
-        self.best_model_ = self.modelos[self.modelos.Metrica == self.modelos.Metrica.max()]
+        #self.best_model_ = self.modelos[self.modelos.Metrica == self.modelos.Metrica.max()]
         self.best_time_ = self.modelos[self.modelos.tiempo == self.modelos.tiempo.min()]
+        
+    def calc_metric(self,data,model):
+        #every metric maid have parameters: (data, model)
+        metric_result = []
+        for k in self.metric.keys():
+            metric_result.append(self.metric[k](data,model))
+        
+        self.metric_result=pd.DataFrame(metric_result, index = self.metric.keys())
+        #self.metric_result = pd.DataFrame(metric_result)
+        return self.metric_result.T
     
