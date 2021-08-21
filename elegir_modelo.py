@@ -97,7 +97,8 @@ class metodo():
         modelos = pd.DataFrame(modelos, columns = ('modelo', 'tiempo','Tamaño'))
         self.metrics = pd.DataFrame(metrics, columns = rdo.columns)
         self.modelos = modelos
-        #self.best_model_ = self.modelos[self.modelos.Metrica == self.modelos.Metrica.max()]
+        self.best_model_ = self.modelos.iloc[self.best_model(self.metrics).index]
+        self.best_metrics_ = self.metrics.iloc[self.best_model(self.metrics).index]
         self.best_time_ = self.modelos[self.modelos.tiempo == self.modelos.tiempo.min()]
         
     def calc_metric(self,data,model):
@@ -110,3 +111,11 @@ class metodo():
         #self.metric_result = pd.DataFrame(metric_result)
         return self.metric_result.T
     
+    def best_model(self, metricas):
+        # the best model have the most larger sum of normalizer metrics
+        from sklearn.preprocessing import StandardScaler
+        st = StandardScaler()
+        m= st.fit_transform(metricas)
+        return metricas[m.sum(axis = 1) == m.sum(axis = 1).max()]
+        
+        
