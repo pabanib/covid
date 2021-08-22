@@ -95,7 +95,7 @@ class lq_peri():
             df = self.X.loc[idx[:,t],:]
             df = df.groupby(grupos).sum()
             col = df.columns
-            interv = intervalos(df,col[0],col[1])[[0,1]]
+            interv = intervalos(df,col[0],col[1])[[0,1]].fillna(1)
             lqs_.append(interv.values)
         self.interv_lqs = lqs_
         return self.interv_lqs
