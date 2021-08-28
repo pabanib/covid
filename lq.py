@@ -80,6 +80,33 @@ def matrix_inters_k(lista):
     matrix = np.array(list(x.values()))-np.eye(l)
     return matrix
 
+
+def matrix_inters_k_debil(lista):
+    # lista debe ser una lista de array de 2 dimensiones en donde cada array representa una variable con su intervalo
+    variables = len(lista)
+    l = len(lista[0])
+    dic = {}
+    for g in range(l):
+        dic[g] = {}
+        for i in range(variables):
+            dic[g][i] = lista[i][g]
+    
+    x = {}
+    for i in dic.keys():
+        v = []
+        for j in dic.keys():
+            r = 0
+            for k in dic[i].keys(): 
+                if i == j:
+                    r += 1
+                else:
+                     r += intersec(dic[i][k],dic[j][k])
+            v.append(r/variables)
+        x[i]=v
+    matrix = np.array(list(x.values()))-np.eye(l)
+    return matrix
+
+
 class lq_peri():
     def __init__(self, X):
         # X debe ser un dataframe de tipo panel con N individuos y T periodos
@@ -106,4 +133,10 @@ class lq_peri():
         self.matriz_intersec = matriz
         return matriz.sum()/(len(matriz)*(len(matriz)-1))
     
-        
+    def calcular_indice_debil(self,grupos):
+        l = self.calc_interv_lq(grupos)
+        matriz = matrix_inters_k_debil(l)
+        self.matriz_intersec_deb = matriz
+        p = len(matriz)
+        return (matriz.sum()/(p*(p-1)))+1/p
+    
