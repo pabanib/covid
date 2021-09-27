@@ -15,6 +15,14 @@ def lq(datos, campo, total):
     indg = datos[campo].sum()/datos[total].sum()
     return [ind,indg,ind/indg]
 
+def lq2(datos, campo, total):
+    s = datos[campo]
+    S = datos[campo].sum()
+    theta = datos[total]/datos[total].sum()
+    l = S*theta
+    lq = s/l
+    return s,l,lq
+
 def intervalos(data, campo, total, a = .95):
     indices = lq(data, campo,total) 
     pi = indices[0]
