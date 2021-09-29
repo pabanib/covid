@@ -85,8 +85,7 @@ class preparar_datos():
         
         return d 
     
-#datos = preparar_datos(df)
-       
+#datos = preparar_datos(covid)
 #covid_ = datos.fit()        
 #covid_.dtypes        
 #d = covid_.groupby(['residencia_dpto',covid_.fecha_apertura.dt.year]).sum()
